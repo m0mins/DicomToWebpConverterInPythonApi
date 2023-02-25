@@ -55,6 +55,8 @@ def convert_dicom_to_webp(input_filename):
     pil_image = Image.fromarray(dicom_file.pixel_array)
     # Save the PIL Image object as a WebP file in the output directory
     webp_filename = os.path.splitext(input_filename)[0] + ".webp"
+    pil_image.save(os.path.join(settings.MEDIA_ROOT, webp_filename), "WEBP")
+
     return webp_filename
 
     
