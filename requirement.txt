@@ -1,0 +1,11 @@
+asgiref==3.4.1
+Django==3.2.18
+djangorestframework==3.14.0
+numpy==1.19.5
+Pillow==8.4.0
+pkg_resources==0.0.0
+psycopg2==2.9.5
+pydicom==2.3.1
+pytz==2022.7.1
+sqlparse==0.4.3
+typing_extensions==4.1.1
