@@ -7,14 +7,16 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.http import HttpResponse
 import os
+import io
 from PIL import Image
 import pydicom
 import pprint
+from io import BytesIO
 from pydicom.data import get_testdata_file
 from django.http import FileResponse
 from rest_framework.parsers import FileUploadParser,MultiPartParser
 from django.conf import settings
-
+import numpy as np
 
 class DicomtoWebpViewset(viewsets.ModelViewSet):
     
@@ -30,18 +32,36 @@ class DicomtoWebpViewset(viewsets.ModelViewSet):
 
         if image_path.endswith(".dcm"):
             webp_filename = convert_dicom_to_webp(image_path)
+            print(webp_filename)
             if webp_filename.endswith(".webp"):
                 imagep=webp_filename
                 dicomImage=ImageConvert.objects.create(name=img_data["name"],image=imagep)
                 dicomImage.save()
+
+
                 serializer=ImageConvertSerializer(dicomImage)
-                return Response({"Success": "Converted Successfully"}, status=status.HTTP_201_CREATED)
+                image_data = serializer.data['image']           
+                media_folder_path = os.path.join(settings.MEDIA_ROOT, image_data)           
+                # Create a PIL Image object from the webp bytes
+                pil_image = Image.open(BytesIO(media_folder_path.encode()))              
+                # Create a BytesIO object to store the image data
+                image_io = BytesIO()              
+                # Save the image to the BytesIO object as webp
+                pil_image.save(image_io, 'webp')              
+                # Set the response headers
+                response = HttpResponse(image_io.getvalue(), content_type='image/webp')
+                response['Content-Disposition'] = 'inline; filename="image.webp"'
+                return response
 
-            else:
-                return Response({"Message": "Invalid image format"}, status=400)
 
-        else:
-            return Response({"Message": "Error !! Upload a valid dicom image format"}, status=400)
+
+                # serializer=ImageConvertSerializer(dicomImage)
+                # return Response(serializer.data)
+                # return Response({"Success": "Converted Successfully"}, status=status.HTTP_201_CREATED)
+        #     else:
+        #         return Response({"Message": "Invalid image format"}, status=400)
+        # else:
+        #     return Response({"Message": "Error !! Upload a valid dicom image format"}, status=400)
         
 
 def convert_dicom_to_webp(input_filename):
