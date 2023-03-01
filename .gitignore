@@ -1,0 +1,23 @@
+# Ignore database files
+*.sqlite3
+
+# Ignore migration files
+*/migrations/*
+
+# Ignore static files
+
+/static/
+
+# Ignore media files
+/media/
+
+# Ignore environment variables file
+.venv
+
+# Ignore compiled Python files
+*.pyc
+
+# Ignore log files
+*.log
+# Backup files # 
+*.bak 
