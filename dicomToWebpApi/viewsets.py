@@ -36,7 +36,6 @@ class DicomtoWebpViewset(viewsets.ModelViewSet):
             if webp_filename.endswith(".webp"):
                 imagep=webp_filename
                 dicomImage=ImageConvert.objects.create(name=img_data["name"],image=imagep)
-<<<<<<< HEAD
                 dicomImage.save()              
                 with open(os.path.join(settings.MEDIA_ROOT,imagep), 'rb') as f:
                     # Open the WebP image file using the Pillow library
@@ -54,36 +53,6 @@ class DicomtoWebpViewset(viewsets.ModelViewSet):
                     response = HttpResponse(image_io.getvalue(), content_type='image/webp')
                     response['Content-Disposition'] = 'inline; filename="image.webp"'
                     return response
-                              
-=======
-                dicomImage.save()
-
-
-                serializer=ImageConvertSerializer(dicomImage)
-                image_data = serializer.data['image']           
-                media_folder_path = os.path.join(settings.MEDIA_ROOT, image_data)           
-                # Create a PIL Image object from the webp bytes
-                pil_image = Image.open(BytesIO(media_folder_path.encode()))              
-                # Create a BytesIO object to store the image data
-                image_io = BytesIO()              
-                # Save the image to the BytesIO object as webp
-                pil_image.save(image_io, 'webp')              
-                # Set the response headers
-                response = HttpResponse(image_io.getvalue(), content_type='image/webp')
-                response['Content-Disposition'] = 'inline; filename="image.webp"'
-                return response
-
-
-
-                # serializer=ImageConvertSerializer(dicomImage)
-                # return Response(serializer.data)
-                # return Response({"Success": "Converted Successfully"}, status=status.HTTP_201_CREATED)
-        #     else:
-        #         return Response({"Message": "Invalid image format"}, status=400)
-        # else:
-        #     return Response({"Message": "Error !! Upload a valid dicom image format"}, status=400)
-        
->>>>>>> 47f92111b0c4203debe55cb89812b2b8bf57e5bd
 
 def convert_dicom_to_webp(input_filename):
     # Load the DICOM file
